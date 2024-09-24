@@ -1,5 +1,4 @@
-CREATE DATABASE SISDB;
-USE SISDB;
+CREATE DATABASE SISDB; 
 
 CREATE TABLE Students (
     student_id INT PRIMARY KEY IDENTITY(1,1),
@@ -9,15 +8,12 @@ CREATE TABLE Students (
     email VARCHAR(100),
     phone_number VARCHAR(10)
 );
-
-
 CREATE TABLE Teacher (
     teacher_id INT PRIMARY KEY IDENTITY(1,1),
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     email VARCHAR(100)
 );
-
 CREATE TABLE Courses (
     course_id INT PRIMARY KEY IDENTITY(1,1),
     course_name VARCHAR(100),
@@ -25,8 +21,6 @@ CREATE TABLE Courses (
     teacher_id INT,
     FOREIGN KEY (teacher_id) REFERENCES Teacher(teacher_id)
 );
-
-
 CREATE TABLE Enrollments (
     enrollment_id INT PRIMARY KEY IDENTITY(1,1),
     student_id INT,
@@ -35,7 +29,6 @@ CREATE TABLE Enrollments (
     FOREIGN KEY (student_id) REFERENCES Students(student_id),
     FOREIGN KEY (course_id) REFERENCES Courses(course_id)
 );
-
 CREATE TABLE Payments (
     payment_id INT PRIMARY KEY IDENTITY(1,1),
     student_id INT,
@@ -58,7 +51,6 @@ VALUES
 ('Manish', 'Rao', '1996-11-10', 'manish.rao@example.com', '8989891234'),
 ('Anita', 'Nair', '1997-04-20', 'anita.nair@example.com', '8080808080');
 
-
 INSERT INTO Teacher (first_name, last_name, email)
 VALUES
 ('Varsha', 'Patil', 'varsha.patil@example.com'),
@@ -71,8 +63,6 @@ VALUES
 ('Vijay', 'Thakur', 'vijay.thakur@example.com'),
 ('Preeti', 'Reddy', 'preeti.reddy@example.com'),
 ('Nisha', 'Chauhan', 'nisha.chauhan@example.com');
-
-
 
 INSERT INTO Courses (course_name, credits, teacher_id)
 VALUES
@@ -87,8 +77,6 @@ VALUES
 ('Statistics', 3, 7),
 ('Political Science', 3, 8);
 
-
-
 INSERT INTO Enrollments (student_id, course_id, enrollment_date)
 VALUES
 (1, 1, '2023-01-10'),
@@ -101,7 +89,6 @@ VALUES
 (8, 8, '2023-01-17'),
 (9, 9, '2023-01-18'),
 (10, 10, '2023-01-19');
-
 
 INSERT INTO Payments (student_id, amount, payment_date)
 VALUES

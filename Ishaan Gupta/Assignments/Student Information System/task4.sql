@@ -47,6 +47,13 @@ WHERE NOT EXISTS (
     )
 );
 
+SELECT t.first_name, t.last_name
+FROM Teacher t
+WHERE NOT EXISTS (
+    SELECT c.course_id
+    FROM Courses c
+    WHERE c.teacher_id = t.teacher_id
+); 
 
 SELECT AVG(DATEDIFF(YEAR, date_of_birth, GETDATE())) AS avg_age
 FROM Students;
