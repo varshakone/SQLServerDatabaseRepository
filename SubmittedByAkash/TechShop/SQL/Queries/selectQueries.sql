@@ -35,7 +35,7 @@ GO
 -- 5---> SQL query to delete a specific order and its associated order details from the "Orders" and "OrderDetails" tables. Allow users to input the order ID as a parameter
 
 -- Create a stored procedure to delete an order and its associated order details
-CREATE PROCEDURE DeleteOrderDetailz
+CREATE PROCEDURE DeleteOrderDetail
     @OrderID INT
 AS
 BEGIN
@@ -48,7 +48,7 @@ END;
 GO
 
 -- Execute the stored procedure to delete an order and its associated order details
-EXEC DeleteOrderDetailz @OrderID = 10;
+EXEC DeleteOrderDetail @OrderID = 10;
 GO
 
 -- Verify that the order and its details have been deleted
@@ -66,7 +66,7 @@ GO
 -- 7 SQL query to update the contact information (e.g., email and address) of a specific customer in the "Customers" table. Allow users to input the customer ID and new contact information as parameters.
 
 -- Create a stored procedure to update customer contact information
-CREATE PROCEDURE UpdateCustomerContactInfo
+CREATE PROCEDURE UpdateCustInfo
     @CustomerID INT,
     @Email NVARCHAR(50),
     @Address NVARCHAR(50)
@@ -80,7 +80,7 @@ END;
 GO
 
 -- Execute the stored procedure to update customer contact information
-EXEC UpdateCustomerContactInfo @CustomerID = 1, @Email = 'changeAkash@gmail.com', @Address = 'Sirusiri IT Park';
+EXEC UpdateCustInfo @CustomerID = 1, @Email = 'changeAkash@gmail.com', @Address = 'Sirusiri IT Park';
 GO
 
 --8 SQL query to recalculate and update the total cost of each order in the "Orders" table based on the prices and quantities in the "OrderDetails" table
@@ -100,7 +100,8 @@ GO
 -- 9 SQL query to delete all orders and their associated order details for a specific customer from the "Orders" and "OrderDetails" tables. Allow users to input the customer ID as a parameter
 
 -- Create a stored procedure to delete all orders and their associated order details for a specific customer
-CREATE PROCEDURE DeleteOrdersByCustomer
+CREATE PROCEDURE DeleteCustByID
+
     @CustomerID INT
 AS
 BEGIN
@@ -116,7 +117,8 @@ END;
 GO
 
 -- Execute the stored procedure to delete all orders and their associated order details for a specific customer
-EXEC DeleteOrdersByCustomer @CustomerID = 1;
+EXEC DeleteCustByID
+ @CustomerID = 1;
 GO
 
 -- Verify that the orders and their details have been deleted
@@ -142,7 +144,7 @@ SET Status = 'Pending';
 GO
 
 -- Create a stored procedure to update the status of a specific order
-CREATE PROCEDURE updateStatus
+CREATE PROCEDURE updateOrdStatus
     @OrderID INT,
     @Status NVARCHAR(50)
 AS
@@ -154,7 +156,7 @@ END;
 GO
 
 -- Execute the stored procedure to update the status of a specific order
-EXEC updateStatus @OrderID = 10, @Status = 'Shipped';
+EXEC updateOrdStatus @OrderID = 10, @Status = 'Shipped';
 GO
 
 -- Verify that the order status has been updated
@@ -163,13 +165,13 @@ FROM Orders;
 GO
 
 --12  SQL query to calculate and update the number of orders placed by each customer in the "Customers" table based on the data in the "Orders" table
-UPDATE Customers
-SET NumberOfOrders = (
-    SELECT COUNT(*)
-FROM Orders
-WHERE Orders.CustomerID = Customers.CustomerID
-);
-GO
+-- UPDATE Customers
+-- SET NumberOfOrders = (
+--     SELECT COUNT(*)
+-- FROM Orders
+-- WHERE Orders.CustomerID = Customers.CustomerID
+-- );
+-- GO
 
 
 
@@ -195,4 +197,99 @@ FROM OrderDetails
 GROUP BY Products.ProductName;
 GO
 
+
+--3 - SQL query to list all customers who have made at least one purchase. Include their names and contact information. 
+
+
+SELECT DISTINCT Customers.FirstName, Customers.LastName, Customers.Email, Customers.Phone, Customers.Address
+FROM Customers
+    JOIN Orders
+    ON Customers.CustomerID = Orders.CustomerID;
+GO
+
+--4 -SQL query to find the most popular electronic gadget, which is the one with the highest total quantity ordered. Include the product name and the total quantity ordered.
+
+SELECT TOP 1
+    Products.ProductName, SUM(OrderDetails.Quantity) AS TotalQuantityOrdered
+FROM OrderDetails
+    JOIN Products
+    ON OrderDetails.ProductID = Products.ProductID
+GROUP BY Products.ProductName
+ORDER BY TotalQuantityOrdered DESC;
+GO
+
+
+-- 5 SQL query to retrieve a list of electronic gadgets along with their corresponding categories.
+
+SELECT ProductName, Description
+FROM Products;
+GO
+
+
+-- 6 - SQL query to calculate the average order value for each customer. Include the customer's name and their average order value
+
+SELECT Customers.FirstName, Customers.LastName, AVG(Orders.TotalAmount) AS AverageOrderValue
+FROM Orders
+    JOIN Customers
+    ON Orders.CustomerID = Customers.CustomerID
+GROUP BY Customers.FirstName, Customers.LastName;
+GO
+
+
+--7 - SQL query to find the order with the highest total revenue. Include the order ID, customer information, and the total revenue.
+
+SELECT TOP 1
+    Orders.OrderID, Customers.FirstName, Customers.LastName, Orders.TotalAmount AS TotalRevenue
+FROM Orders
+    JOIN Customers
+    ON Orders.CustomerID = Customers.CustomerID
+ORDER BY TotalRevenue DESC;
+GO
+
+--8- SQL query to list electronic gadgets and the number of times each product has been  ordered.
+
+SELECT Products.ProductName, COUNT(OrderDetails.ProductID) AS NumberOfOrders
+FROM OrderDetails
+    JOIN Products
+    ON OrderDetails.ProductID = Products.ProductID
+GROUP BY Products.ProductName;
+GO
+
+-- 9 QL query to find customers who have purchased a specific electronic gadget product. Allow users to input the product name as a parameter.
+CREATE PROCEDURE FindCustomersByProduct
+    @ProductName NVARCHAR(50)
+AS
+BEGIN
+    SELECT Customers.FirstName, Customers.LastName, Customers.Email, Customers.Phone, Customers.Address
+    FROM Customers
+        JOIN Orders
+        ON Customers.CustomerID = Orders.CustomerID
+        JOIN OrderDetails
+        ON Orders.OrderID = OrderDetails.OrderID
+        JOIN Products
+        ON OrderDetails.ProductID = Products.ProductID
+    WHERE Products.ProductName = @ProductName;
+END;
+GO
+
+-- 10 Execute the stored procedure to find customers who have purchased a specific electronic gadget product
+EXEC FindCustomersByProduct @ProductName = 'Printer';
+GO
+
+
+-- SQL query to calculate the total revenue generated by all orders placed within a specific time period. Allow users to input the start and end dates as parameters. 
+
+CREATE PROCEDURE CalculateTotalRevenueByDateRange
+    @StartDate DATETIME,
+    @EndDate DATETIME
+AS
+BEGIN
+    SELECT SUM(Orders.TotalAmount) AS TotalRevenue
+    FROM Orders
+    WHERE Orders.OrderDate BETWEEN @StartDate AND @EndDate;
+END;
+GO
+
+-- Execute the stored procedure to calculate the total revenue generated by all orders placed within a specific time period
+EXEC CalculateTotalRevenueByDateRange @StartDate = '2021-01-05', @EndDate = '2021-01-07';
 
