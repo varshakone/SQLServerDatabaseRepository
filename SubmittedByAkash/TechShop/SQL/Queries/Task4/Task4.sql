@@ -10,8 +10,6 @@ FROM Customers
     ON Customers.CustomerID = Orders.CustomerID
 WHERE Orders.CustomerID IS NULL;
 
-
-
 --2 Write an SQL query to find the total number of products available for sale
 
 SELECT SUM(QuantityInStock) AS TotalProductsAvailable
