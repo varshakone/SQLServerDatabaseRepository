@@ -8,6 +8,7 @@ FROM Students s
 JOIN Payments p ON s.student_id = p.student_id
 GROUP BY s.student_id, s.first_name, s.last_name;
 
+-- question 2
 
 Select * From Enrollments
 Select * From Courses
