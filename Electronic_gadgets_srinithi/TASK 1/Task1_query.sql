@@ -1,5 +1,5 @@
 CREATE DATABASE TechShop;
-
+USE TechShop;
 
 CREATE TABLE Customers (
     CustomerID INT PRIMARY KEY IDENTITY(1,1),
@@ -110,3 +110,7 @@ INSERT INTO Inventory (ProductID, Stock, LastUpdated) VALUES
 GO
 
 SELECT *FROM Customers;
+SELECT *FROM Products;
+SELECT *FROM OrderDetails;
+SELECT *FROM Orders;
+SELECT *FROM Inventory;
