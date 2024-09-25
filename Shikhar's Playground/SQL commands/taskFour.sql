@@ -8,6 +8,7 @@ WHERE NOT EXISTS (
     SELECT 1
     FROM Orders o
     WHERE o.CustomerID = c.CustomerID
+    
 );
 
 -- 2. SQL query to find the total number of products available for sale:
